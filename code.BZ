@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Интернет провайдеры</title>
+  <style>
+    body {
+      background-color: #fff;
+      color: #000;
+      font-family: Arial, sans-serif;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    .back-button {
+      background-color: #dc3545;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    input[type="text"], input[type="password"] {
+      padding: 5px;
+      width: 150px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Интернет провайдеры</h1>
+    <div id="login-section">
+      <label for="username">Логин:</label>
+      <input type="text" id="username" name="username" />
+      <br />
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" name="password" />
+      <br />
+      <button class="button" id="login-button">Войти</button>
+    </div>
+    <div id="content-section" style="display: none;">
+      <button class="button" id="script-button">Скрипт</button>
+      <button class="button" id="providers-button">Провайдеры</button>
+
+      <div id="script-section" style="display: none;">
+        <p>Это наш скрипт</p>
+        <button class="button back-button">Назад</button>
+      </div>
+
+      <div id="providers-section" style="display: none;">
+        <button class="button" id="rostelecom-button">Ростелеком</button>
+        <button class="button" id="megafon-button">Мегафон</button>
+      </div>
+
+      <div id="tariffs-section" style="display: none;">
+        <input type="text" id="search-input" placeholder="Стоимость тарифа">
+        <table id="tariffs-table"></table>
+        <div>
+          <p>Заметки</p>
+          <textarea id="notes-input"></textarea>
+          <button class="button" id="clear-button">Стереть</button>
+        </div>
+        <button class="button back-button">Назад</button>
+      </div>
+      
+      <div id="timer-section">
+        <p id="timer">00:00:00</p>
+        <button class="button" id="start-button">Старт</button>
+        <button class="button" id="pause-button">Пауза</button>
+        <button class="button" id="reset-button">Сброс</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Авторизация
+    document.getElementById("login-button").addEventListener("click", function() {
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+
+      if (username === "1234" && password === "4321") {
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("content-section").style.display = "block";
+      } else {
+        alert("Неверный логин или пароль. Попробуйте еще раз.");
+      }
+    });
+
+    // Таймер работы сайта
+    var timerElement = document.getElementById("timer");
+    var startButton = document.getElementById("start-button");
+    var pauseButton = document.getElementById("pause-button");
+    var resetButton = document.getElementById("reset-button");
+    var startTime;
+    var timerInterval;
+
+    startButton.addEventListener("click", function () {
+      if (!timerInterval) {
+        startTimer();
+      }
+    });
+
+    pauseButton.addEventListener("click", function () {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    });
+
+    resetButton.addEventListener("click", function () {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      updateTime(0);
+    });
+
+    function startTimer() {
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      var elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+      updateTime(elapsedTime);
+    }
+
+    function updateTime(seconds) {
+      var hours = Math.floor(seconds / 3600);
+      var minutes = Math.floor((seconds - hours * 3600) / 60);
+      var remainingSeconds = seconds - hours * 3600 - minutes * 60;
+
+      var formattedTime =
+        ("0" + hours).slice(-2) +
+        ":" +
+        ("0" + minutes).slice(-2) +
+        ":" +
+        ("0" + remainingSeconds).slice(-2);
+
+      timerElement.textContent = formattedTime;
+    }
+    
+    // Код для кнопки «Скрипт»
+    document.getElementById("script-button").addEventListener("click", function() {
+      document.getElementById("script-section").style.display = "block";
+    });
+    
+    document.getElementsByClassName("back-button")[0].addEventListener("click", function() {
+      document.getElementById("script-section").style.display = "none";
+    });
+
+    // Код для кнопки «Провайдеры»
+    document.getElementById("providers-button").addEventListener("click", function() {
+      document.getElementById("providers-section").style.display = "block";
+    });
+    
+    document.getElementsByClassName("back-button")[1].addEventListener("click", function() {
+      document.getElementById("providers-section").style.display = "none";
+    });
+ // Тарифы Ростелеком
+    document.getElementById("rostelecom-button").addEventListener("click", function() {
+      showTariffs([
+        { name: "Монка", homeInternet: "100мбт/сек", television: "нет", mobile: "нет", price: "420 руб/мес" },
+        { name: "Инет+сим", homeInternet: "100мбт/сек", television: "нет", mobile: "50гб/1200мин", price: "590 руб/мес" },
+        { name: "Инет+тв", homeInternet: "100мбт/сек", television: "180 каналов", mobile: "Нет", price: "700 руб/мес" },
+        { name: "Конверт", homeInternet: "100мбт/сек", television: "200 каналов", mobile: "1sim 50гб/1200мин", price: "780 руб/мес" },
+        { name: "Конверт+", homeInternet: "100мбт/сек", television: "250 каналов", mobile: "3sim 50гб/2000мин", price: "900 руб/мес" },
+      ]);
+    });
+    
+    // Тарифы Мегафон
+    document.getElementById("megafon-button").addEventListener("click", function() {
+      showTariffs([
+        { name: "Монка", homeInternet: "100мбит/сек", television: "нет", mobile: "нет", price: "430 руб/мес" },
+        { name: "Тариф B", homeInternet: "Да", television: "Нет", mobile: "Нет", price: "400 руб/мес" },
+        { name: "Тариф C", homeInternet: "Нет", television: "Да", mobile: "Да", price: "800 руб/мес" },
+        { name: "Тариф D", homeInternet: "Нет", television: "Да", mobile: "Нет", price: "500 руб/мес" },
+      ]);
+    });
+
+    // Показать тарифы
+    function showTariffs(tariffs) {
+      document.getElementById("tariffs-section").style.display = "block";
+      var table = document.getElementById("tariffs-table");
+
+      // Очистить предыдущие данные таблицы
+      table.innerHTML = "";
+
+      // Создать заголовок таблицы
+      var thead = table.createTHead();
+      var row = thead.insertRow();
+      var nameCell = row.insertCell();
+      nameCell.innerHTML = "<b>Тариф</b>";
+      var homeInternetCell = row.insertCell();
+      homeInternetCell.innerHTML = "<b>Домашний интернет</b>";
+      var televisionCell = row.insertCell();
+      televisionCell.innerHTML = "<b>Телевидение</b>";
+      var mobileCell = row.insertCell();
+      mobileCell.innerHTML = "<b>Мобильная связь</b>";
+      var priceCell = row.insertCell();
+      priceCell.innerHTML = "<b>Цена</b>";
+
+      // Заполнить таблицу тарифами
+      for (var i = 0; i < tariffs.length; i++) {
+        var tariff = tariffs[i];
+        var row = table.insertRow();
+        var nameCell = row.insertCell();
+        nameCell.innerHTML = tariff.name;
+        var homeInternetCell = row.insertCell();
+        homeInternetCell.innerHTML = tariff.homeInternet;
+        var televisionCell = row.insertCell();
+        televisionCell.innerHTML = tariff.television;
+        var mobileCell = row.insertCell();
+        mobileCell.innerHTML = tariff.mobile;
+        var priceCell = row.insertCell();
+        priceCell.innerHTML = tariff.price;
+      }
+
+      // Обработчик для поисковой строки
+      var searchInput = document.getElementById("search-input");
+      searchInput.addEventListener("input", function() {
+        var searchValue = parseInt(searchInput.value);
+
+        for (var i = 1; i < table.rows.length; i++) {
+          var priceCell = table.rows[i].cells[4];
+          var price = parseInt(priceCell.innerText);
+
+          if (price === searchValue || isNaN(searchValue)) {
+            table.rows[i].style.display = "";
+          } else {
+            table.rows[i].style.display = "none";
+          }
+        }
+      });
+    }
+
+    // Обработчик для кнопок "Назад"
+    var backButtons = document.getElementsByClassName("back-button");
+    for (var i = 0; i < backButtons.length; i++) {
+      backButtons[i].addEventListener("click", function() {
+        document.getElementById("tariffs-section").style.display = "none";
+        document.getElementById("search-input").value = "";
+        document.getElementById("notes-input").value = "";
+      });
+    }
+    
+    // Обработчик для кнопки "Стереть"
+    document.getElementById("clear-button").addEventListener("click", function() {
+      document.getElementById("notes-input").value = "";
+    });
+  </script>
+</body>
+</html>
